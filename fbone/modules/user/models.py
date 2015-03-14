@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import uuid
+
 from sqlalchemy import Column, types
 from sqlalchemy.ext.mutable import Mutable
 from werkzeug import generate_password_hash, check_password_hash
@@ -10,6 +12,12 @@ from fbone.extensions import db
 from fbone.utils import get_current_time, GENDER_TYPE, STRING_LEN
 from fbone.modules.base import Base
 from .constants import USER, USER_ROLE, ADMIN, INACTIVE, USER_STATUS
+
+
+social_accounts = db.Table(
+    'social_accounts',
+    db.Column('user_id', db.Integer(), db.ForeignKey('user.id')),
+    db.Column('social_id', db.Integer(), db.ForeignKey('userssocialaccount.id')))
 
 
 class UsersSocialAccount(Base):
@@ -30,19 +38,19 @@ class UserDetail(Base):
     def gender(self):
         return GENDER_TYPE.get(self.gender_code)
 
-    created_time = Column(db.DateTime, default=get_current_time)
-
 
 class User(Base, UserMixin):
-    name = Column(db.String(STRING_LEN), nullable=False, unique=True)
+    name = Column(db.String(STRING_LEN), nullable=False, unique=True, default='')
+    nickname = Column(db.String(STRING_LEN), nullable=False, default='')
     email = Column(db.String(STRING_LEN), nullable=False, unique=True)
-    openid = Column(db.String(STRING_LEN), unique=True)
     activation_key = Column(db.String(STRING_LEN))
-    created_time = Column(db.DateTime, default=get_current_time)
-
+    registered_at = Column(db.DateTime, default=get_current_time)
     avatar = Column(db.String(STRING_LEN))
 
-    _password = Column('password', db.String(STRING_LEN), nullable=False)
+    social_ids = db.relationship('UsersSocialAccount', secondary=social_accounts,
+                            backref=db.backref('users', lazy='dynamic'))
+
+    _password = Column('password', db.String(STRING_LEN), nullable=False, default=uuid.uuid4().hex)
 
     def _get_password(self):
         return self._password

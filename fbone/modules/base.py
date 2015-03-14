@@ -34,9 +34,9 @@ class Base(db.Model):
         :param model: the model instance to check
         :param raise_error: flag to raise an error on a mismatch
         """
-        rv = isinstance(model, self.__model__)
+        rv = isinstance(model, self.__class__)
         if not rv and raise_error:
-            raise ValueError('%s is not of type %s' % (model, self.__model__))
+            raise ValueError('%s is not of type %s' % (model, self.__class__))
         return rv
 
     def _preprocess_params(self, kwargs):
@@ -59,28 +59,28 @@ class Base(db.Model):
     def all(self):
         """Returns a generator containing all instances of the base model.
         """
-        return self.__model__.query.all()
+        return self.__class__.query.all()
 
     def get_by_id(self, id):
         """Returns an instance of the base model with the specified id.
         Returns `None` if an instance with the specified id does not exist.
         :param id: the instance id
         """
-        return self.__model__.query.get(id)
+        return self.__class__.query.get(id)
 
     def get_all(self, *ids):
         """Returns a list of instances of the base model with the specified
         ids.
         :param *ids: instance ids
         """
-        return self.__model__.query.filter(self.__model__.id.in_(ids)).all()
+        return self.__class__.query.filter(self.__class__.id.in_(ids)).all()
 
     def find(self, **kwargs):
         """Returns a list of instances of the base model filtered by the
         specified key word arguments.
         :param **kwargs: filter parameters
         """
-        return self.__model__.query.filter_by(**kwargs)
+        return self.__class__.query.filter_by(**kwargs)
 
     def first(self, **kwargs):
         """Returns the first instance found of the base model filtered by
@@ -94,13 +94,13 @@ class Base(db.Model):
         raises an 404 error if an instance with the specified id does not exist.
         :param id: the instance id
         """
-        return self.__model__.query.get_or_404(id)
+        return self.__class__.query.get_or_404(id)
 
     def new(self, **kwargs):
         """Returns a new, unsaved instance of the base model class.
         :param **kwargs: instance parameters
         """
-        return self.__model__(**self._preprocess_params(kwargs))
+        return self.__class__(**self._preprocess_params(kwargs))
 
     def create(self, **kwargs):
         """Returns a new, saved instance of the base model class.

@@ -43,6 +43,7 @@ def initdb():
 
     admin = User(
             name=u'admin',
+            nickname=u'agadorspartacus',
             email=u'admin@example.com',
             password=u'123456',
             role_code=ADMIN,
