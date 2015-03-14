@@ -12,6 +12,11 @@ from fbone.modules.base import Base
 from .constants import USER, USER_ROLE, ADMIN, INACTIVE, USER_STATUS
 
 
+class UsersSocialAccount(Base):
+    provider = db.Column(db.String(STRING_LEN), nullable=False)
+    social_id = db.Column(db.String(64), nullable=False, unique=True)
+
+
 class UserDetail(Base):
     age = Column(db.Integer)
     phone = Column(db.String(STRING_LEN))

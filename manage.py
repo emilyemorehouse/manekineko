@@ -21,7 +21,8 @@ from fbone.modules.user.commands import CreateUserCommand, DeleteUserCommand, Li
 
 
 app = create_app()
-manager = Manager(app)
+manager = Manager(create_app)
+manager.add_option('-c', '--config', dest='config', required=False)
 manager.add_command('create_user', CreateUserCommand())
 manager.add_command('delete_user', DeleteUserCommand())
 manager.add_command('list_users', ListUsersCommand())
@@ -55,11 +56,6 @@ def initdb():
     db.session.add(admin)
     db.session.commit()
 
-
-manager.add_option('-c', '--config',
-                   dest="config",
-                   required=False,
-                   help="config file")
 
 if __name__ == "__main__":
     manager.run()

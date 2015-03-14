@@ -14,7 +14,7 @@ from fbone.modules.frontend import frontend
 from fbone.modules.api import api
 from fbone.modules.admin import admin
 from fbone.extensions import db, mail, cache, login_manager
-from fbone.utils import INSTANCE_FOLDER_PATH
+from fbone.utils import PROJECT_PATH, INSTANCE_FOLDER_PATH
 
 
 # For import *
@@ -38,10 +38,10 @@ def create_app(config=None, app_name=None, blueprints=None):
         blueprints = DEFAULT_BLUEPRINTS
 
     app = Flask(app_name, instance_path=INSTANCE_FOLDER_PATH, instance_relative_config=True)
-    
+
     # Init assets
     assets.init_app(app)
-    
+
     configure_app(app, config)
     configure_hook(app)
     configure_blueprints(app, blueprints)
@@ -54,19 +54,22 @@ def create_app(config=None, app_name=None, blueprints=None):
 
 
 def configure_app(app, config=None):
-    """Different ways of configurations."""
-
     # http://flask.pocoo.org/docs/api/#configuration
+    # inherit the base config object
     app.config.from_object(DefaultConfig)
 
-    # http://flask.pocoo.org/docs/config/#instance-folders
-    app.config.from_pyfile('production.cfg', silent=True)
+     # If config is None, try to load config file from environment variable
+    if config is None and 'FBONE_CFG' in os.environ:
+        # Use instance folder instead of env variables to make deployment easier.
+        config = os.environ['FBONE_CFG']
 
+    # check for config last time in case it was stored as ENV variable
     if config:
-        app.config.from_object(config)
+        # pass configuration file in with application manager
+        config_file = os.path.join(PROJECT_PATH, config)
+        app.config.from_pyfile(config_file, silent=False)
 
-    # Use instance folder instead of env variables to make deployment easier.
-    #app.config.from_envvar('%s_APP_CONFIG' % DefaultConfig.PROJECT.upper(), silent=True)
+    # print app.config['OAUTH_CREDENTIALS']
 
 
 def configure_extensions(app):
