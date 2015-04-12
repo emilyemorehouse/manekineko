@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import uuid
+from uuid import uuid4
 
-from sqlalchemy import Column, types
-from sqlalchemy.ext.mutable import Mutable
+from sqlalchemy import Column
 from werkzeug import generate_password_hash, check_password_hash
 from flask.ext.login import UserMixin
 
@@ -50,7 +49,7 @@ class User(Base, UserMixin):
     social_ids = db.relationship('UsersSocialAccount', secondary=social_accounts,
                             backref=db.backref('users', lazy='dynamic'))
 
-    _password = Column('password', db.String(STRING_LEN), nullable=False, default=uuid.uuid4().hex)
+    _password = Column('password', db.String(STRING_LEN), nullable=False, default=uuid4().hex)
 
     def _get_password(self):
         return self._password
@@ -120,8 +119,8 @@ class User(Base, UserMixin):
     def follow(self, user):
         user.followers.add(self.id)
         self.following.add(user.id)
-        user.followers=list(user.followers)
-        self.following=list(self.following)
+        user.followers = list(user.followers)
+        self.following = list(self.following)
         # user.followers=
         # db.session.add(self)
         # db.session.add(user)
@@ -130,15 +129,15 @@ class User(Base, UserMixin):
 
     def unfollow(self, user):
         if self.id in user.followers:
-            print "1.0:%s"%user.followers
+            print "1.0:%s" % user.followers
             user.followers.remove(self.id)
-            user.followers=list(user.followers)
-            print "2.0:%s"%user.followers
+            user.followers = list(user.followers)
+            print "2.0:%s" % user.followers
             db.session.add(user)
 
         if user.id in self.following:
             self.following.remove(user.id)
-            self.following=list(self.following)
+            self.following = list(self.following)
             db.session.add(self)
 
         db.session.commit()
@@ -149,9 +148,8 @@ class User(Base, UserMixin):
     def get_followers_query(self):
         return User.query.filter(User.id.in_(self.followers or set()))
 
-    def is_following(self,follower):
+    def is_following(self, follower):
         return follower.id in self.following and self.id in follower.followers
-
 
     # ================================================================
     # Class methods

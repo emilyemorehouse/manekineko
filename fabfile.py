@@ -23,8 +23,10 @@ def reset():
     local("mkdir /tmp/instance")
     local("python manage.py initdb")
 
+
 def apt_get(*packages):
     sudo('apt-get -y --no-upgrade install %s' % ' '.join(packages), shell=False)
+
 
 def setup():
     """
@@ -38,14 +40,17 @@ def setup():
     local("python setup.py install")
     reset()
 
+
 def create_database():
     """Creates role and database"""
-    db_user = 'ss' # define these
+    db_user = 'ss'  # define these
     db_pass = 'ss'
     db_table = 'manekineko'
-    sudo('psql -c "CREATE USER %s WITH NOCREATEDB NOCREATEUSER ENCRYPTED PASSWORD E\'%s\'"' % (db_user, db_pass), user='postgres')
+    sudo('psql -c "CREATE USER %s WITH NOCREATEDB NOCREATEUSER ENCRYPTED PASSWORD E\'%s\'"' %
+        (db_user, db_pass), user='postgres')
     sudo('psql -c "CREATE DATABASE %s WITH OWNER %s"' % (
         db_table, db_user), user='postgres')
+
 
 def d():
     """
@@ -53,6 +58,7 @@ def d():
     """
     reset()
     local("python manage.py run")
+
 
 def babel():
     """
@@ -62,7 +68,6 @@ def babel():
     local("pybabel init -i messages.pot -d lurcat/translations -l es")
     local("pybabel init -i messages.pot -d lurcat/translations -l en")
     local("pybabel compile -f -d lurcat/translations")
-
 
 
 @task
@@ -75,22 +80,24 @@ def dev():
     env.gunicorn_workers = 1
     local("export LURCAT_CFG='config/server.cfg'")
 
+
 @task
 def deploy():
     local('hg pull')
     local('hg update')
     restart()
 
+
 @task
 def restart():
     gunicorn.restart()
+
 
 @task
 def start_app():
     gunicorn.start()
 
+
 @task
 def stop_app():
     gunicorn.stop()
-
-

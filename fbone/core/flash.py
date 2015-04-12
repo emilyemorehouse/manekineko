@@ -6,9 +6,10 @@
     fbone core email methods
     Convenience wrappers for flask.flash() with special-character handling.
 
-    With PyCharm inspections it's easy to see which custom flash messages are available. If you directly use flask.flash(),
-    the "type" of message (info, warning, etc.) is a string passed as a second argument to the function. With this file
-    PyCharm will tell you which type of messages are supported.
+    With PyCharm inspections it's easy to see which custom flash messages are available. If you
+    directly use flask.flash(), the "type" of message (info, warning, etc.) is a string passed as a
+    second argument to the function. With this file PyCharm will tell you which type of messages are
+    supported.
 """
 
 from flask import flash
@@ -28,7 +29,7 @@ def _escape(message):
         "'": '&#39;',
         '`': '&lsquo;',
         '\n': '<br>',
-        }
+    }
     for k, v in translations.items():
         message = message.replace(k, v)
 

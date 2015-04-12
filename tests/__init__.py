@@ -29,29 +29,29 @@ class TestCase(Base):
     def init_data(self):
 
         demo = User(
-                name=u'demo',
-                email=u'demo@example.com',
-                password=u'123456',
-                role_code=USER,
-                status_code=ACTIVE,
-                user_detail=UserDetail(
-                    gender_code=MALE,
-                    age=10,
-                    url=u'http://demo.example.com',
-                    location=u'Tallahassee, FL',
-                    bio=u'admin Guy is ... hmm ... just a demo guy.'))
+            name=u'demo',
+            email=u'demo@example.com',
+            password=u'123456',
+            role_code=USER,
+            status_code=ACTIVE,
+            user_detail=UserDetail(
+                gender_code=MALE,
+                age=10,
+                url=u'http://demo.example.com',
+                location=u'Tallahassee, FL',
+                bio=u'admin Guy is ... hmm ... just a demo guy.'))
         admin = User(
-                name=u'admin',
-                email=u'admin@example.com',
-                password=u'123456',
-                role_code=ADMIN,
-                status_code=ACTIVE,
-                user_detail=UserDetail(
-                    gender_code=MALE,
-                    age=10,
-                    url=u'http://admin.example.com',
-                    location=u'Tallahassee, FL',
-                    bio=u'admin Guy is ... hmm ... just a admin guy.'))
+            name=u'admin',
+            email=u'admin@example.com',
+            password=u'123456',
+            role_code=ADMIN,
+            status_code=ACTIVE,
+            user_detail=UserDetail(
+                gender_code=MALE,
+                age=10,
+                url=u'http://admin.example.com',
+                location=u'Tallahassee, FL',
+                bio=u'admin Guy is ... hmm ... just a admin guy.'))
         db.session.add(demo)
         db.session.add(admin)
         db.session.commit()

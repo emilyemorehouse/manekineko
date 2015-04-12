@@ -7,7 +7,7 @@
     Convenience functions which interact with SQLAlchemy models.
 """
 
-from sqlalchemy import Column, func, Integer
+from sqlalchemy import Column, Integer
 from sqlalchemy.ext.declarative import declared_attr
 
 from fbone.extensions import db
@@ -15,8 +15,8 @@ from fbone.extensions import db
 
 class Base(db.Model):
     """Convenience base DB model class. Makes sure tables in MySQL are created as InnoDB.
-    This is to enforce foreign key constraints (MyISAM doesn't support constraints) outside of production. Tables are
-    also named to avoid collisions.
+    This is to enforce foreign key constraints (MyISAM doesn't support constraints) outside of
+    production. Tables are also named to avoid collisions.
     """
 
     @declared_attr

@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 
-from uuid import uuid4
-
 from flask import (Blueprint, render_template, current_app, request,
                    flash, url_for, redirect, session, abort)
 from flask.ext.mail import Message
-from flask.ext.login import login_required, login_user, current_user, logout_user, confirm_login, login_fresh
+from flask.ext.login import (login_required, login_user, current_user, logout_user, confirm_login,
+    login_fresh)
 from flask.ext.babel import gettext as _
 
-from fbone.modules.user import User, UserDetail
-from fbone.extensions import  mail, login_manager
-from .forms import SignupForm, LoginForm, RecoverPasswordForm, ReauthForm, ChangePasswordForm, CreateProfileForm
+from fbone.modules.user import User
+from fbone.extensions import mail, login_manager
+from .forms import (SignupForm, LoginForm, RecoverPasswordForm, ReauthForm, ChangePasswordForm,
+    CreateProfileForm)
 
 
 frontend = Blueprint('frontend', __name__)
@@ -26,7 +26,7 @@ def create_profile():
             openid=request.args.get('openid'))
 
     if form.validate_on_submit():
-        form.create_profile()
+        user = form.create_profile()
 
         if login_user(user):
             return redirect(url_for('user.index'))
@@ -161,9 +161,12 @@ def reset_password():
 
             user.recover_password()
 
-            url = url_for('frontend.change_password', email=user.email, activation_key=user.activation_key, _external=True)
-            html = render_template('macros/_reset_password.html', project=current_app.config['PROJECT'], username=user.name, url=url)
-            message = Message(subject='Reset your password in ' + current_app.config['PROJECT'], html=html, recipients=[user.email])
+            url = url_for('frontend.change_password', email=user.email,
+                activation_key=user.activation_key, _external=True)
+            html = render_template('macros/_reset_password.html',
+                project=current_app.config['PROJECT'], username=user.name, url=url)
+            message = Message(subject='Reset your password in ' + current_app.config['PROJECT'],
+                html=html, recipients=[user.email])
             mail.send(message)
 
             return render_template('frontend/reset_password.html', form=form)

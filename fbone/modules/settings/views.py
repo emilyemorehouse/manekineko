@@ -1,14 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import os
-import hashlib
-from datetime import datetime
-
-from flask import Blueprint, render_template, current_app, request, flash
+from flask import Blueprint, render_template, request, flash
 from flask.ext.login import login_required, current_user
 
 from fbone.modules.user import User
-from fbone.utils import allowed_file, make_dir
 from .forms import ProfileForm, PasswordForm
 
 
@@ -27,7 +22,7 @@ def profile():
 
     if form.validate_on_submit():
 
-        form.create_profile(request,user)
+        form.create_profile(request, user)
 
         flash('Public profile updated.', 'success')
 
@@ -44,7 +39,7 @@ def password():
     if form.validate_on_submit():
         form.update_password(user)
 
-        flash(_('Password updated.'), 'success')
+        flash('Password updated.', 'success')
 
     return render_template('settings/password.html', user=user,
             active="password", form=form)

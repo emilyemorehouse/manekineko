@@ -3,7 +3,6 @@
 import os
 
 from flask import Flask, request, render_template
-from flask.ext.login import login_required, current_user
 from flask.ext.babel import Babel
 
 from fbone import assets
@@ -58,7 +57,7 @@ def configure_app(app, config=None):
     # inherit the base config object
     app.config.from_object(DefaultConfig)
 
-     # If config is None, try to load config file from environment variable
+    # If config is None, try to load config file from environment variable
     if config is None and 'FBONE_CFG' in os.environ:
         # Use instance folder instead of env variables to make deployment easier.
         config = os.environ['FBONE_CFG']
@@ -132,7 +131,8 @@ def configure_logging(app):
     app.logger.setLevel(logging.INFO)
 
     info_log = os.path.join(app.config['LOG_FOLDER'], 'info.log')
-    info_file_handler = logging.handlers.RotatingFileHandler(info_log, maxBytes=100000, backupCount=10)
+    info_file_handler = logging.handlers.RotatingFileHandler(info_log, maxBytes=100000,
+        backupCount=10)
     info_file_handler.setLevel(logging.INFO)
     info_file_handler.setFormatter(logging.Formatter(
         '%(asctime)s %(levelname)s: %(message)s '
@@ -141,9 +141,9 @@ def configure_logging(app):
     app.logger.addHandler(info_file_handler)
 
     # Testing
-    #app.logger.info("testing info.")
-    #app.logger.warn("testing warn.")
-    #app.logger.error("testing error.")
+    # app.logger.info("testing info.")
+    # app.logger.warn("testing warn.")
+    # app.logger.error("testing error.")
 
     mail_handler = SMTPHandler(app.config['MAIL_SERVER'],
                                app.config['MAIL_USERNAME'],
@@ -167,9 +167,6 @@ def configure_hook(app):
     # @app.context_processor
     # def ctx_processor():
     #     pass
-
-
-
 
 
 def configure_error_handlers(app):

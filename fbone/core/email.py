@@ -25,12 +25,13 @@ LOG = getLogger(__name__)
 def _override_html():
     """Temporarily changes the module constants in `tbtools` to make it email-friendly.
 
-    Gmail strips out everything between <style></style>, so all styling has to be inline using the style="" attribute in
-    HTML tags. These changes makes the Flask debugging page HTML (shown when unhandled exceptions are raised with
-    DEBUG = True) email-friendly. Designed to be used with the `with` statement.
+    Gmail strips out everything between <style></style>, so all styling has to be inline using the
+    style="" attribute in HTML tags. These changes makes the Flask debugging page HTML (shown when
+    unhandled exceptions are raised with DEBUG = True) email-friendly. Designed to be used with the
+    `with` statement.
 
-    It's too bad `tbtools.Traceback` doesn't copy module constants to instance variables where they can be easily
-    overridden, ugh!
+    It's too bad `tbtools.Traceback` doesn't copy module constants to instance variables where they
+    can be easily overridden, ugh!
     """
     # Backup.
     old_page_html = tbtools.PAGE_HTML
@@ -58,7 +59,8 @@ def send_exception(subject):
 
     Use the same HTML styling as Flask tracebacks in debug web servers.
 
-    This function must be called while the exception is happening. It picks up the raised exception with sys.exc_info().
+    This function must be called while the exception is happening. It picks up the raised exception
+    with sys.exc_info().
 
     Positional arguments:
     subject -- subject line of the email (to be prepended by 'Application Error: ').
@@ -87,9 +89,10 @@ def send_exception(subject):
 def send_email(subject, body=None, html=None, recipients=None, throttle=None):
     """Send an email. Optionally throttle the amount an identical email goes out.
 
-    If the throttle argument is set, an md5 checksum derived from the subject, body, html, and recipients is stored in
-    Redis with a lock timeout. On the first email sent, the email goes out like normal. But when other emails with the
-    same subject, body, html, and recipients is supposed to go out, and the lock hasn't expired yet, the email will be
+    If the throttle argument is set, an md5 checksum derived from the subject, body, html, and
+    recipients is stored in Redis with a lock timeout. On the first email sent, the email goes out
+    like normal. But when other emails with the same subject, body, html, and recipients is supposed
+    to go out, and the lock hasn't expired yet, the email will be
     dropped and never sent.
 
     Positional arguments:
@@ -98,8 +101,8 @@ def send_email(subject, body=None, html=None, recipients=None, throttle=None):
     Keyword arguments.
     body -- the body of the email (no HTML).
     html -- the body of the email, can be HTML (overrides body).
-    recipients -- list or set (not string) of email addresses to send the email to. Defaults to the ADMINS list in the
-        Flask config.
+    recipients -- list or set (not string) of email addresses to send the email to. Defaults to the
+    ADMINS list in the Flask config.
     throttle -- time in seconds or datetime.timedelta object between sending identical emails.
     """
     recipients = recipients or current_app.config['ADMINS']

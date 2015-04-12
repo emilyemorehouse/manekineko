@@ -2,7 +2,7 @@
 
 import os
 
-from flask import Blueprint, render_template, send_from_directory, abort, redirect, url_for, request, flash
+from flask import Blueprint, render_template, send_from_directory, abort, redirect, url_for, flash
 from flask import current_app as APP
 from flask.ext.login import login_user, login_required, current_user
 from fbone.extensions import db, login_manager
@@ -20,7 +20,7 @@ def load_user(id):
 
 @user.route('/')
 @login_required
-def index(offset = 0):
+def index(offset=0):
     if not current_user.is_authenticated():
         abort(403)
     return render_template('user/index.html', user=current_user)
@@ -59,7 +59,8 @@ def oauth_callback(provider):
 @login_required
 def profile(_id):
     user = User.get_by_id(_id)
-    return render_template('user/profile.html', user=user, current_user=current_user, followed=current_user.is_following(user))
+    return render_template('user/profile.html', user=user, current_user=current_user,
+        followed=current_user.is_following(user))
 
 
 @user.route('/<int:user_id>/avatar/<path:filename>')
@@ -74,16 +75,16 @@ def avatar(user_id, filename):
 def follow_user(user_id):
     user = User.get_by_id(user_id)
     current_user.follow(user)
-    flash(_("You are now following") +" %s"%user.name,'success')
-    return render_template('user/profile.html', user=user, current_user=current_user, followed=current_user.is_following(user))
+    flash("You are now following" + " %s" % user.name, 'success')
+    return render_template('user/profile.html', user=user, current_user=current_user,
+        followed=current_user.is_following(user))
+
 
 @user.route('/unfollow_user/<int:user_id>')
 @login_required
 def unfollow_user(user_id):
     user = User.get_by_id(user_id)
     current_user.unfollow(user)
-    flash(_("You are now not following")+" %s"%user.name,'success')
-    return render_template('user/profile.html', user=user, current_user=current_user, followed=current_user.is_following(user))
-
-
-
+    flash("You are now not following" + " %s" % user.name, 'success')
+    return render_template('user/profile.html', user=user, current_user=current_user,
+        followed=current_user.is_following(user))

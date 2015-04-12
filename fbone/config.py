@@ -32,7 +32,7 @@ class BaseConfig(object):
     TRANSLATIONS_FOLDER = os.path.join(PROJECT_ROOT, 'fbone/translations')
     TRANSLATIONS_PATH = 'LC_MESSAGES/'
     TRANSALTIONS_FILE = 'messages.po'
-    LOGO_FILE = os.path.join(PROJECT_ROOT,'fbone/static/img/logo.png')
+    LOGO_FILE = os.path.join(PROJECT_ROOT, 'fbone/static/img/logo.png')
     make_dir(UPLOAD_FOLDER)
 
 
@@ -47,7 +47,7 @@ class DefaultConfig(BaseConfig):
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + INSTANCE_FOLDER_PATH + '/db.sqlite'
     # SQLALCHEMY_DATABASE_URI = 'postgres://ss:ss@localhost/manekineko'
     # MYSQL for production.
-    #SQLALCHEMY_DATABASE_URI = 'mysql://username:password@server/db?charset=utf8'
+    # SQLALCHEMY_DATABASE_URI = 'mysql://username:password@server/db?charset=utf8'
 
     # Flask-babel: http://pythonhosted.org/Flask-Babel/
     ACCEPT_LANGUAGES = ['zh']

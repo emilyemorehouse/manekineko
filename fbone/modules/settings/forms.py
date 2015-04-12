@@ -7,14 +7,13 @@ from datetime import datetime
 from flask import current_app
 from flask.ext.wtf import Form
 from flask.ext.wtf.html5 import URLField, EmailField, TelField
-from wtforms import (ValidationError, TextField, HiddenField, PasswordField,
-    SubmitField, TextAreaField, IntegerField, RadioField,FileField,
-    DecimalField, SelectField, DateField, Field, widgets)
+from wtforms import (ValidationError, TextField, HiddenField, PasswordField, SubmitField,
+    TextAreaField, IntegerField, RadioField, FileField)
 from wtforms.validators import (Required, Length, EqualTo, Email, NumberRange, AnyOf, Optional, URL)
 from flask.ext.babel import lazy_gettext as _
 from flask.ext.login import current_user
 
-from fbone.utils import PASSWORD_LEN_MIN, PASSWORD_LEN_MAX, AGE_MIN, AGE_MAX, DEPOSIT_MIN, DEPOSIT_MAX
+from fbone.utils import PASSWORD_LEN_MIN, PASSWORD_LEN_MAX, AGE_MIN, AGE_MAX
 from fbone.utils import allowed_file, ALLOWED_AVATAR_EXTENSIONS, make_dir
 from fbone.utils import GENDER_TYPE
 from fbone.extensions import db
@@ -27,7 +26,8 @@ class ProfileForm(Form):
     email = EmailField(_('Email'), [Required(), Email()])
     # Don't use the same name as model because we are going to use populate_obj().
     avatar_file = FileField(_("Avatar"), [Optional()])
-    gender_code = RadioField(_("Gender"), [AnyOf([str(val) for val in GENDER_TYPE.keys()])], choices=[(str(val), label) for val, label in GENDER_TYPE.items()])
+    gender_code = RadioField(_("Gender"), [AnyOf([str(val) for val in GENDER_TYPE.keys()])],
+        choices=[(str(val), label) for val, label in GENDER_TYPE.items()])
     age = IntegerField(_('Age'), [Optional(), NumberRange(AGE_MIN, AGE_MAX)])
     phone = TelField(_('Phone'), [Length(max=64)])
     url = URLField(_('URL'), [Optional(), URL()])
@@ -42,9 +42,10 @@ class ProfileForm(Form):
 
     def validate_avatar_file(form, field):
         if field.data and not allowed_file(field.data.filename):
-            raise ValidationError(_("Please upload files with extensions:")+" %s" % "/".join(ALLOWED_AVATAR_EXTENSIONS))
+            raise ValidationError(_("Please upload files with extensions:") + " %s" %
+                "/".join(ALLOWED_AVATAR_EXTENSIONS))
 
-    def create_profile(self,request,user):
+    def create_profile(self, request, user):
 
         if self.avatar_file.data:
             upload_file = request.files[self.avatar_file.name]
@@ -53,7 +54,8 @@ class ProfileForm(Form):
                 # or use secure_filename:
                 # http://flask.pocoo.org/docs/patterns/fileuploads/
 
-                user_upload_dir = os.path.join(current_app.config['UPLOAD_FOLDER'], "user_%s" % user.id)
+                user_upload_dir = os.path.join(current_app.config['UPLOAD_FOLDER'],
+                    "user_%s" % user.id)
                 current_app.logger.debug(user_upload_dir)
 
                 make_dir(user_upload_dir)
@@ -78,8 +80,10 @@ class ProfileForm(Form):
 class PasswordForm(Form):
     next = HiddenField()
     password = PasswordField(_('Current password'), [Required()])
-    new_password = PasswordField(_('New password'), [Required(), Length(PASSWORD_LEN_MIN, PASSWORD_LEN_MAX)])
-    password_again = PasswordField(_('Password again'), [Required(), Length(PASSWORD_LEN_MIN, PASSWORD_LEN_MAX), EqualTo('new_password')])
+    new_password = PasswordField(_('New password'), [Required(),
+        Length(PASSWORD_LEN_MIN, PASSWORD_LEN_MAX)])
+    password_again = PasswordField(_('Password again'), [Required(),
+        Length(PASSWORD_LEN_MIN, PASSWORD_LEN_MAX), EqualTo('new_password')])
     submit = SubmitField(_('Save'))
 
     def validate_password(form, field):
@@ -87,7 +91,7 @@ class PasswordForm(Form):
         if not user.check_password(field.data):
             raise ValidationError(_("Password is wrong."))
 
-    def update_password(self,user):
+    def update_password(self, user):
         self.populate_obj(user)
         user.password = self.new_password.data
 

@@ -12,7 +12,7 @@ from datetime import datetime
 
 PROJECT_PATH = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 # Instance folder path, make it independent.
-INSTANCE_FOLDER_PATH = os.path.join(PROJECT_PATH,'tmp/instance')
+INSTANCE_FOLDER_PATH = os.path.join(PROJECT_PATH, 'tmp/instance')
 
 ALLOWED_AVATAR_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
@@ -99,12 +99,13 @@ def make_dir(dir_path):
     except Exception, e:
         raise e
 
+
 def remove_duplicates(lst):
     _set = set()
     # relies on the fact that set.add() always returns None.
-    return [ l for l in lst if
-             l not in _set and not _set.add(l) ]
+    return [l for l in lst if l not in _set and not _set.add(l)]
 
-def diff(mainlist,slist):
+
+def diff(mainlist, slist):
     diff = list(set(mainlist) - set(slist))
     return [x for x in mainlist if x in diff]

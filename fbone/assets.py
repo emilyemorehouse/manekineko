@@ -23,6 +23,7 @@ css_all = Bundle("vendor/bootstrap/css/bootstrap-theme.css",
 js_vendor = Bundle("vendor/bootstrap/js/bootstrap.min.js",
                    filters="jsmin", output="js/vendor.min.js")
 
+
 def init_app(app):
     webassets = Environment(app)
     webassets.register('css_all', css_all)

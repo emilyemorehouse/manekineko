@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from flask.ext.wtf import Form
-from flask.ext.wtf.html5 import URLField, EmailField, TelField
-from wtforms import (ValidationError, TextField, HiddenField, PasswordField,
-    SubmitField, TextAreaField, IntegerField, RadioField,FileField,
-    DecimalField, SelectField, DateField, Field, widgets)
-from wtforms.validators import (Required, Length, EqualTo, Email, NumberRange, AnyOf, Optional, URL)
+from wtforms import (HiddenField, SubmitField, RadioField, FileField, DateField)
+from wtforms.validators import AnyOf
 
 from fbone.extensions import db
 from fbone.modules.user import USER_ROLE, USER_STATUS
@@ -21,7 +18,7 @@ class UserForm(Form):
     created_time = DateField(u'Created time')
     submit = SubmitField(u'Save')
 
-    def save(self,user):
+    def save(self, user):
         self.populate_obj(user)
         db.session.add(user)
         db.session.commit()

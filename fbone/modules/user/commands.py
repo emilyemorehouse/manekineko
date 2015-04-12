@@ -50,5 +50,5 @@ class ListUsersCommand(Command):
     """List all users"""
 
     def run(self):
-        for u in Users.all():
+        for u in User.all():
             print 'User(id=%s email=%s)' % (u.id, u.email)
