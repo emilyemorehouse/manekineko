@@ -10,3 +10,5 @@ db = SQLAlchemy()
 mail = Mail()
 cache = Cache()
 login_manager = LoginManager()
+
+# add redis here

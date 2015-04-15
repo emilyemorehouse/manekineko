@@ -24,27 +24,19 @@ class UsersSocialAccount(Base):
     social_id = db.Column(db.String(64), nullable=False, unique=True)
 
 
-class UserDetail(Base):
-    age = Column(db.Integer)
-    phone = Column(db.String(STRING_LEN))
-    url = Column(db.String(STRING_LEN))
-    location = Column(db.String(STRING_LEN))
+class User(Base, UserMixin):
+    name = Column(db.String(STRING_LEN), nullable=False, unique=True, default='')
+    fullname = Column(db.String(STRING_LEN), nullable=False, default='')
+    email = Column(db.String(STRING_LEN), nullable=False, unique=True)
+    activation_key = Column(db.String(STRING_LEN))
+    registered_at = Column(db.DateTime, default=get_current_time)
     bio = Column(db.String(STRING_LEN))
-
+    avatar = Column(db.String(STRING_LEN))
     gender_code = db.Column(db.Integer)
 
     @property
     def gender(self):
         return GENDER_TYPE.get(self.gender_code)
-
-
-class User(Base, UserMixin):
-    name = Column(db.String(STRING_LEN), nullable=False, unique=True, default='')
-    nickname = Column(db.String(STRING_LEN), nullable=False, default='')
-    email = Column(db.String(STRING_LEN), nullable=False, unique=True)
-    activation_key = Column(db.String(STRING_LEN))
-    registered_at = Column(db.DateTime, default=get_current_time)
-    avatar = Column(db.String(STRING_LEN))
 
     social_ids = db.relationship('UsersSocialAccount', secondary=social_accounts,
                             backref=db.backref('users', lazy='dynamic'))
@@ -98,8 +90,6 @@ class User(Base, UserMixin):
 
     # ================================================================
     # One-to-one (uselist=False) relationship between users and user_details.
-    user_detail_id = Column(db.Integer, db.ForeignKey("userdetail.id"))
-    user_detail = db.relationship("UserDetail", uselist=False, backref="user")
 
     # ================================================================
     # Follow / Following
@@ -121,18 +111,12 @@ class User(Base, UserMixin):
         self.following.add(user.id)
         user.followers = list(user.followers)
         self.following = list(self.following)
-        # user.followers=
-        # db.session.add(self)
-        # db.session.add(user)
-        # print "1.0"
         db.session.commit()
 
     def unfollow(self, user):
         if self.id in user.followers:
-            print "1.0:%s" % user.followers
             user.followers.remove(self.id)
             user.followers = list(user.followers)
-            print "2.0:%s" % user.followers
             db.session.add(user)
 
         if user.id in self.following:

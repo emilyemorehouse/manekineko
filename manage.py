@@ -3,7 +3,7 @@
     manage
     ~~~~~~
 
-    Manager module
+    Flask-Script Manager
 """
 
 from flask.ext.script import Manager
@@ -11,7 +11,7 @@ from flask.ext.script import Manager
 from fbone import create_app
 from fbone.extensions import db
 from fbone.utils import MALE
-from fbone.modules.user import User, UserDetail, ADMIN, ACTIVE
+from fbone.modules.user import User, ADMIN, ACTIVE
 
 # from fbone.modules.admin.commands import ...
 # from fbone.modules.api.commands import ...
@@ -29,12 +29,6 @@ manager.add_command('list_users', ListUsersCommand())
 
 
 @manager.command
-def run():
-    """Run in local machine."""
-    app.run(host='0.0.0.0')
-
-
-@manager.command
 def initdb():
     """Init/reset database."""
 
@@ -43,17 +37,13 @@ def initdb():
 
     admin = User(
         name=u'admin',
-        nickname=u'agadorspartacus',
+        fullname=u'Agador Spartacus',
         email=u'admin@example.com',
         password=u'123456',
         role_code=ADMIN,
         status_code=ACTIVE,
-        user_detail=UserDetail(
-            gender_code=MALE,
-            age=32,
-            url=u'http://seminoles.com',
-            location=u'Tallahassee, FL',
-            bio=u'FSU Grad. Go Noles!'))
+        gender_code=MALE,
+        bio=u'FSU Grad. Go Noles!')
     db.session.add(admin)
     db.session.commit()
 

@@ -16,14 +16,14 @@ from flask.ext.mail import Message
 from werkzeug.debug import tbtools
 
 from fbone.extensions import mail, redis
-# from pypi_portal.models.redis import EMAIL_THROTTLE
 
 LOG = getLogger(__name__)
 
 
 @contextmanager
 def _override_html():
-    """Temporarily changes the module constants in `tbtools` to make it email-friendly.
+    """
+    Temporarily changes the module constants in `tbtools` to make it email-friendly.
 
     Gmail strips out everything between <style></style>, so all styling has to be inline using the
     style="" attribute in HTML tags. These changes makes the Flask debugging page HTML (shown when
@@ -55,8 +55,8 @@ def _override_html():
 
 
 def send_exception(subject):
-    """Send Python exception tracebacks via email to the ADMINS list.
-
+    """
+    Send Python exception tracebacks via email to the ADMINS list.
     Use the same HTML styling as Flask tracebacks in debug web servers.
 
     This function must be called while the exception is happening. It picks up the raised exception
@@ -73,13 +73,14 @@ def send_exception(subject):
     subject = 'Application Error: {}'.format(subject)
 
     # Apply throttle.
-    # md5 = hashlib.md5('{}{}'.format(subject, html)).hexdigest()
-    # seconds = int(current_app.config['MAIL_EXCEPTION_THROTTLE'])
-    # lock = redis.lock(EMAIL_THROTTLE.format(md5=md5), timeout=seconds)
-    # have_lock = lock.acquire(blocking=False)
-    # if not have_lock:
-    #     LOG.debug('Suppressing email: {}'.format(subject))
-    #     return
+    if current_app.config['REDIS']:
+        md5 = hashlib.md5('{}{}'.format(subject, html)).hexdigest()
+        seconds = int(current_app.config['MAIL_EXCEPTION_THROTTLE'])
+        lock = redis.lock(EMAIL_THROTTLE.format(md5=md5), timeout=seconds)
+        have_lock = lock.acquire(blocking=False)
+        if not have_lock:
+            LOG.debug('Suppressing email: {}'.format(subject))
+            return
 
     # Send email.
     msg = Message(subject=subject, recipients=current_app.config['ADMINS'], html=html)
@@ -87,7 +88,8 @@ def send_exception(subject):
 
 
 def send_email(subject, body=None, html=None, recipients=None, throttle=None):
-    """Send an email. Optionally throttle the amount an identical email goes out.
+    """
+    Send an email. Optionally throttle the amount an identical email goes out.
 
     If the throttle argument is set, an md5 checksum derived from the subject, body, html, and
     recipients is stored in Redis with a lock timeout. On the first email sent, the email goes out

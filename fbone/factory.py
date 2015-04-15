@@ -130,7 +130,7 @@ def configure_logging(app):
     # Suppress DEBUG messages.
     app.logger.setLevel(logging.INFO)
 
-    info_log = os.path.join(app.config['LOG_FOLDER'], 'info.log')
+    info_log = os.path.join(app.config['LOG_FOLDER'], 'fbone.log')
     info_file_handler = logging.handlers.RotatingFileHandler(info_log, maxBytes=100000,
         backupCount=10)
     info_file_handler.setLevel(logging.INFO)

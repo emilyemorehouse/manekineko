@@ -9,7 +9,7 @@ from wtforms import (ValidationError, BooleanField, TextField, HiddenField, Pass
 from wtforms.validators import (Required, Length, EqualTo, Email)
 from flask.ext.babel import lazy_gettext as _
 
-from fbone.modules.user import User, UserDetail
+from fbone.modules.user import User
 from fbone.utils import (PASSWORD_LEN_MIN, PASSWORD_LEN_MAX,
         USERNAME_LEN_MIN, USERNAME_LEN_MAX)
 from fbone.extensions import db
@@ -47,7 +47,6 @@ class SignupForm(Form):
 
     def signup(self):
         user = User()
-        user.user_detail = UserDetail()
         self.populate_obj(user)
         db.session.add(user)
         db.session.commit()

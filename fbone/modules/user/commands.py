@@ -7,8 +7,6 @@
 """
 
 from flask.ext.script import Command, prompt, prompt_pass
-from flask_security.forms import RegisterForm
-from flask_security.registerable import register_user
 from werkzeug.datastructures import MultiDict
 
 from .models import User
@@ -16,6 +14,7 @@ from .models import User
 
 class CreateUserCommand(Command):
     """Create a user"""
+    """!!!broken!!!"""
 
     def run(self):
         email = prompt('Email')
